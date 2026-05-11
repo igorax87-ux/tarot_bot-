@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import BOT_TOKEN, ADMIN_ID
 from database import init_db, save_user, get_stats
-from handlers import love, master_chat
+from handlers import love, master_chat, numerology
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,6 +17,7 @@ dp = Dispatcher(storage=MemoryStorage())
 
 dp.include_router(love.router)
 dp.include_router(master_chat.router)
+dp.include_router(numerology.router)
 
 
 def main_menu():
@@ -158,34 +159,6 @@ async def menu_tarot(callback: CallbackQuery):
     )
 
 
-@dp.callback_query(F.data == "menu_numerology")
-async def menu_numerology(callback: CallbackQuery):
-    await callback.answer()
-    kb = InlineKeyboardBuilder()
-    kb.button(text="◀️ Назад", callback_data="back_menu")
-    await callback.message.edit_text(
-        "🔢 *Нумерология*\n\n"
-        "Напиши свою дату рождения в формате:\n"
-        "`01.01.1990`\n\n"
-        "И я раскрою твоё число судьбы! ✨",
-        parse_mode="Markdown",
-        reply_markup=kb.as_markup()
-    )
-
-
-@dp.callback_query(F.data == "menu_natal")
-async def menu_natal(callback: CallbackQuery):
-    await callback.answer()
-    kb = InlineKeyboardBuilder()
-    kb.button(text="◀️ Назад", callback_data="back_menu")
-    await callback.message.edit_text(
-        "⭐ *Натальная карта*\n\n"
-        "Напиши дату и место рождения:\n"
-        "`01.01.1990, Киев`\n\n"
-        "Я раскрою твои планеты и знаки! 🌙",
-        parse_mode="Markdown",
-        reply_markup=kb.as_markup()
-    )
 
 
 @dp.callback_query(F.data == "back_menu")
